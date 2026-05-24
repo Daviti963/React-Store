@@ -27,11 +27,19 @@ export default function Home() {
   const [availableProducts, setAvailableProducts] = useState(products);
   const [counter, setCounter] = useState(0);
   const [searchValue, setSearchValue] = useState('');
+  const [isCartVisible, setIsCartVisible] = useState(false);
+
 
   const addToCart = (product: Product): void => {
     setCart([...cart, product]);
     setAvailableProducts(availableProducts.filter(item => item.id !== product.id));
     setCounter(counter + 1);
+  }
+
+  const removeFromCart = (product: Product): void => {
+    setAvailableProducts([...availableProducts, product]);
+    setCart(cart.filter(item => item.id !== product.id));
+    setCounter(counter - 1);
   }
 
   const filteredProducts = availableProducts.filter(item =>
@@ -42,6 +50,11 @@ export default function Home() {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchValue(e.target.value);
   }
+
+
+  const classToggle = () => setIsCartVisible(!isCartVisible)
+
+
 
 
   return (
@@ -56,7 +69,7 @@ export default function Home() {
             value={searchValue}
             onChange={onChange}
           />
-          <button>View All <span>{counter}</span></button>
+          <button onClick={classToggle}>View All <span>{counter}</span></button>
         </div>
 
         <ul className={styles.ul}>
@@ -85,6 +98,39 @@ export default function Home() {
           ))}
         </ul>
 
+
+        {isCartVisible && (
+          <>
+            <h2>Your Cart</h2>
+
+            <ul className={styles.ul}>
+              {cart.map(item => (
+                <li className={styles.liProduct} key={item.id}>
+                  <img src={item.image} />
+                  <div className={styles.content}>
+                    <h3 className={styles.productName}>{item.name}</h3>
+
+                    <div className={styles.price}>
+                      {item.onSale ? (
+                        <div>
+                          <span>${item.price} <p>${item.oldPrice}</p></span>
+                        </div>
+                      ) : (
+                        <span>${item.price}</span>
+                      )}
+                      <button className={styles.cartIcon} onClick={() => removeFromCart(item)}>{cartIcon}</button>
+                    </div>
+
+                  </div>
+                  {item.onSale && (
+                    <span className={styles.itemSale}>Sale {item.discountPercent}%</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        
       </div>
 
     </main>
