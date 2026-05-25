@@ -1,0 +1,6 @@
+.itemRating {
+    display: flex;
+    align-items: center;
+    margin: 7px 0 13.5px 12px;
+    gap: 2.5px;
+}

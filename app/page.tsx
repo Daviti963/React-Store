@@ -1,65 +1,142 @@
+'use client'
 import Image from "next/image";
-
+import styles from "./page.module.css";
+import { useEffect, useState } from "react";
+import { products } from "@/data/products";
+import { Product } from "@/types/type";
 export default function Home() {
+  const cartIcon = (
+    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+      <path d="M4.81669 6.48336H2.31669L0.650024 15.65H15.65L13.9834 6.48336H11.4834M4.81669 6.48336V3.98336C4.81669 2.14241 6.30907 0.650024 8.15002 0.650024C9.99097 0.650024 11.4834 2.14241 11.4834 3.98336V6.48336M4.81669 6.48336H11.4834M4.81669 6.48336V8.98336M11.4834 6.48336V8.98336" stroke="#1A1A1A" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+
+  const star = (
+    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0  10 10" fill="none">
+      <path d="M5.08172 7.81542L7.4461 9.31317C7.74835 9.50442 8.12335 9.21979 8.03372 8.86692L7.35085 6.18004C7.33156 6.1052 7.33378 6.02643 7.35727 5.9528C7.38075 5.87916 7.42454 5.81365 7.4836 5.76379L9.60385 3.99942C9.8821 3.76767 9.73885 3.30529 9.38072 3.28204L6.6121 3.10204C6.53755 3.09675 6.46605 3.0704 6.4059 3.02606C6.34575 2.98171 6.29944 2.92119 6.27235 2.85154L5.2396 0.251293C5.21148 0.177395 5.16156 0.11379 5.09646 0.0689113C5.03136 0.0240326 4.95416 0 4.8751 0C4.79603 0 4.71883 0.0240326 4.65373 0.0689113C4.58864 0.11379 4.53872 0.177395 4.5106 0.251293L3.47785 2.85154C3.45081 2.92126 3.40452 2.98186 3.34437 3.02627C3.28422 3.07069 3.21268 3.0971 3.1381 3.10242L0.369473 3.28242C0.0117229 3.30529 -0.132277 3.76767 0.146348 3.99942L2.2666 5.76417C2.32559 5.81399 2.36934 5.87944 2.39282 5.953C2.4163 6.02656 2.41856 6.10525 2.39935 6.18004L1.76635 8.67192C1.65872 9.09529 2.1091 9.43692 2.47135 9.20704L4.66885 7.81542C4.73061 7.77615 4.80228 7.7553 4.87547 7.7553C4.94866 7.7553 5.02033 7.77615 5.0821 7.81542H5.08172Z" fill="#FF8A00" />
+    </svg>
+  )
+
+  const emptyStar = (
+    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+      <path d="M5.08172 7.81542L7.4461 9.31317C7.74835 9.50442 8.12335 9.21979 8.03372 8.86692L7.35085 6.18004C7.33156 6.1052 7.33378 6.02643 7.35727 5.9528C7.38075 5.87916 7.42454 5.81365 7.4836 5.76379L9.60385 3.99942C9.8821 3.76767 9.73885 3.30529 9.38072 3.28204L6.6121 3.10204C6.53755 3.09675 6.46605 3.0704 6.4059 3.02606C6.34575 2.98171 6.29944 2.92119 6.27235 2.85154L5.2396 0.251293C5.21148 0.177395 5.16156 0.11379 5.09646 0.0689113C5.03136 0.0240326 4.95416 0 4.8751 0C4.79603 0 4.71883 0.0240326 4.65373 0.0689113C4.58864 0.11379 4.53872 0.177395 4.5106 0.251293L3.47785 2.85154C3.45081 2.92126 3.40452 2.98186 3.34437 3.02627C3.28422 3.07069 3.21268 3.0971 3.1381 3.10242L0.369473 3.28242C0.0117229 3.30529 -0.132277 3.76767 0.146348 3.99942L2.2666 5.76417C2.32559 5.81399 2.36934 5.87944 2.39282 5.953C2.4163 6.02656 2.41856 6.10525 2.39935 6.18004L1.76635 8.67192C1.65872 9.09529 2.1091 9.43692 2.47135 9.20704L4.66885 7.81542C4.73061 7.77615 4.80228 7.7553 4.87547 7.7553C4.94866 7.7553 5.02033 7.77615 5.0821 7.81542H5.08172Z" fill="#CCCCCC" />
+    </svg>
+  )
+
+  const [cart, setCart] = useState<Product[]>([]);
+  const [availableProducts, setAvailableProducts] = useState(products);
+  const [counter, setCounter] = useState(0);
+  const [searchValue, setSearchValue] = useState('');
+  const [isCartVisible, setIsCartVisible] = useState(false);
+
+
+  useEffect(() => {
+    if (counter === 0) {
+      setIsCartVisible(false);
+    }
+  }, [counter]);
+
+  const addToCart = (product: Product): void => {
+    setCart([...cart, product]);
+    setAvailableProducts(availableProducts.filter(item => item.id !== product.id));
+    setCounter(counter + 1);
+  }
+
+  const removeFromCart = (product: Product): void => {
+    setAvailableProducts([...availableProducts, product]);
+    setCart(cart.filter(item => item.id !== product.id));
+    setCounter(counter - 1);
+  }
+
+  const filteredProducts = availableProducts.filter(item =>
+    item.name.toLowerCase().includes(searchValue.toLowerCase())
+  )
+
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => setSearchValue(e.target.value);
+
+  const classToggle = (): void => {
+    if (counter > 0) {
+      setIsCartVisible(!isCartVisible);
+    }
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className={styles.container}>
+
+      <div>
+
+        <div className={styles.header}>
+          <h1>Popular Products</h1>
+          <input type="text"
+            placeholder="Search Product"
+            value={searchValue}
+            onChange={onChange}
+          />
+          <button onClick={classToggle}>View All {counter > 0 ? <span>{counter}</span> : ''}</button>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+
+        <ul className={styles.ul}>
+          {filteredProducts.map(item => (
+            <li className={styles.liProduct} key={item.id}>
+              <img src={item.image} />
+              <div className={styles.content}>
+                <h3 className={styles.productName}>{item.name}</h3>
+
+                <div className={styles.price}>
+                  {item.onSale ? (
+                    <div>
+                      <span>${item.price} <p>${item.oldPrice}</p></span>
+                    </div>
+                  ) : (
+                    <span>${item.price}</span>
+                  )}
+                  <button className={styles.cartIcon} onClick={() => addToCart(item)}>{cartIcon}</button>
+                </div>
+
+              </div>
+              {item.onSale && (
+                <span className={styles.itemSale}>Sale {item.discountPercent}%</span>
+              )}
+            </li>
+          ))}
+        </ul>
+
+
+        {isCartVisible && (
+          <>
+            <h2>Your Cart</h2>
+
+            <ul className={styles.ul}>
+              {cart.map(item => (
+                <li className={styles.liProduct} key={item.id}>
+                  <img src={item.image} />
+                  <div className={styles.content}>
+                    <h3 className={styles.productName}>{item.name}</h3>
+
+                    <div className={styles.price}>
+                      {item.onSale ? (
+                        <div>
+                          <span>${item.price} <p>${item.oldPrice}</p></span>
+                        </div>
+                      ) : (
+                        <span>${item.price}</span>
+                      )}
+                      <button className={styles.cartIcon} onClick={() => removeFromCart(item)}>{cartIcon}</button>
+                    </div>
+
+                  </div>
+                  {item.onSale && (
+                    <span className={styles.itemSale}>Sale {item.discountPercent}%</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
+      </div>
+
+    </main>
   );
 }
