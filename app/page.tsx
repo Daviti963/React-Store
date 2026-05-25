@@ -1,7 +1,7 @@
 'use client'
 import Image from "next/image";
 import styles from "./page.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { products } from "@/data/products";
 import { Product } from "@/types/type";
 export default function Home() {
@@ -30,6 +30,12 @@ export default function Home() {
   const [isCartVisible, setIsCartVisible] = useState(false);
 
 
+  useEffect(() => {
+    if (counter === 0) {
+      setIsCartVisible(false);
+    }
+  }, [counter]);
+
   const addToCart = (product: Product): void => {
     setCart([...cart, product]);
     setAvailableProducts(availableProducts.filter(item => item.id !== product.id));
@@ -47,15 +53,13 @@ export default function Home() {
   )
 
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setSearchValue(e.target.value);
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => setSearchValue(e.target.value);
+
+  const classToggle = (): void => {
+    if (counter > 0) {
+      setIsCartVisible(!isCartVisible);
+    }
   }
-
-
-  const classToggle = () => setIsCartVisible(!isCartVisible)
-
-
-
 
   return (
     <main className={styles.container}>
@@ -69,7 +73,7 @@ export default function Home() {
             value={searchValue}
             onChange={onChange}
           />
-          <button onClick={classToggle}>View All <span>{counter}</span></button>
+          <button onClick={classToggle}>View All {counter > 0 ? <span>{counter}</span> : ''}</button>
         </div>
 
         <ul className={styles.ul}>
@@ -130,7 +134,7 @@ export default function Home() {
             </ul>
           </>
         )}
-        
+
       </div>
 
     </main>
