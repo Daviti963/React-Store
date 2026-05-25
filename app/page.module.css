@@ -129,6 +129,12 @@
     margin-right: 16px;
 }
 
+.itemRating {
+    display: flex;
+    align-items: center;
+    gap: 2.5px;
+}
+
 .cartIcon:hover {
     background-color: #00B207;
 }

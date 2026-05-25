@@ -48,9 +48,9 @@ export default function Home() {
     setCounter(counter - 1);
   }
 
-  const filteredProducts = availableProducts.filter(item =>
-    item.name.toLowerCase().includes(searchValue.toLowerCase())
-  )
+  const filteredProducts = availableProducts
+    .filter(item => item.name.toLowerCase().includes(searchValue.toLowerCase()))
+    .sort((a, b) => b.rating - a.rating);
 
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => setSearchValue(e.target.value);
@@ -93,7 +93,9 @@ export default function Home() {
                   )}
                   <button className={styles.cartIcon} onClick={() => addToCart(item)}>{cartIcon}</button>
                 </div>
-
+                <div className={styles.itemRating}>{Array.from({ length: 5 }, (_, i) => (
+                  <span key={i}>{i < item.rating ? star : emptyStar}</span>
+                ))}</div>
               </div>
               {item.onSale && (
                 <span className={styles.itemSale}>Sale {item.discountPercent}%</span>
@@ -124,7 +126,9 @@ export default function Home() {
                       )}
                       <button className={styles.cartIcon} onClick={() => removeFromCart(item)}>{cartIcon}</button>
                     </div>
-
+                    <div className={styles.itemRating}>{Array.from({ length: 5 }, (_, i) => (
+                      <span key={i}>{i < item.rating ? star : emptyStar}</span>
+                    ))}</div>
                   </div>
                   {item.onSale && (
                     <span className={styles.itemSale}>Sale {item.discountPercent}%</span>
