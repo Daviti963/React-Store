@@ -4,24 +4,9 @@ import styles from "./page.module.css";
 import { useEffect, useState } from "react";
 import { products } from "@/data/products";
 import { Product } from "@/types/type";
+
+import ProductGrid from "@/components/ProductGrid";
 export default function Home() {
-  const cartIcon = (
-    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
-      <path d="M4.81669 6.48336H2.31669L0.650024 15.65H15.65L13.9834 6.48336H11.4834M4.81669 6.48336V3.98336C4.81669 2.14241 6.30907 0.650024 8.15002 0.650024C9.99097 0.650024 11.4834 2.14241 11.4834 3.98336V6.48336M4.81669 6.48336H11.4834M4.81669 6.48336V8.98336M11.4834 6.48336V8.98336" stroke="#1A1A1A" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-
-  const star = (
-    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0  10 10" fill="none">
-      <path d="M5.08172 7.81542L7.4461 9.31317C7.74835 9.50442 8.12335 9.21979 8.03372 8.86692L7.35085 6.18004C7.33156 6.1052 7.33378 6.02643 7.35727 5.9528C7.38075 5.87916 7.42454 5.81365 7.4836 5.76379L9.60385 3.99942C9.8821 3.76767 9.73885 3.30529 9.38072 3.28204L6.6121 3.10204C6.53755 3.09675 6.46605 3.0704 6.4059 3.02606C6.34575 2.98171 6.29944 2.92119 6.27235 2.85154L5.2396 0.251293C5.21148 0.177395 5.16156 0.11379 5.09646 0.0689113C5.03136 0.0240326 4.95416 0 4.8751 0C4.79603 0 4.71883 0.0240326 4.65373 0.0689113C4.58864 0.11379 4.53872 0.177395 4.5106 0.251293L3.47785 2.85154C3.45081 2.92126 3.40452 2.98186 3.34437 3.02627C3.28422 3.07069 3.21268 3.0971 3.1381 3.10242L0.369473 3.28242C0.0117229 3.30529 -0.132277 3.76767 0.146348 3.99942L2.2666 5.76417C2.32559 5.81399 2.36934 5.87944 2.39282 5.953C2.4163 6.02656 2.41856 6.10525 2.39935 6.18004L1.76635 8.67192C1.65872 9.09529 2.1091 9.43692 2.47135 9.20704L4.66885 7.81542C4.73061 7.77615 4.80228 7.7553 4.87547 7.7553C4.94866 7.7553 5.02033 7.77615 5.0821 7.81542H5.08172Z" fill="#FF8A00" />
-    </svg>
-  )
-
-  const emptyStar = (
-    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
-      <path d="M5.08172 7.81542L7.4461 9.31317C7.74835 9.50442 8.12335 9.21979 8.03372 8.86692L7.35085 6.18004C7.33156 6.1052 7.33378 6.02643 7.35727 5.9528C7.38075 5.87916 7.42454 5.81365 7.4836 5.76379L9.60385 3.99942C9.8821 3.76767 9.73885 3.30529 9.38072 3.28204L6.6121 3.10204C6.53755 3.09675 6.46605 3.0704 6.4059 3.02606C6.34575 2.98171 6.29944 2.92119 6.27235 2.85154L5.2396 0.251293C5.21148 0.177395 5.16156 0.11379 5.09646 0.0689113C5.03136 0.0240326 4.95416 0 4.8751 0C4.79603 0 4.71883 0.0240326 4.65373 0.0689113C4.58864 0.11379 4.53872 0.177395 4.5106 0.251293L3.47785 2.85154C3.45081 2.92126 3.40452 2.98186 3.34437 3.02627C3.28422 3.07069 3.21268 3.0971 3.1381 3.10242L0.369473 3.28242C0.0117229 3.30529 -0.132277 3.76767 0.146348 3.99942L2.2666 5.76417C2.32559 5.81399 2.36934 5.87944 2.39282 5.953C2.4163 6.02656 2.41856 6.10525 2.39935 6.18004L1.76635 8.67192C1.65872 9.09529 2.1091 9.43692 2.47135 9.20704L4.66885 7.81542C4.73061 7.77615 4.80228 7.7553 4.87547 7.7553C4.94866 7.7553 5.02033 7.77615 5.0821 7.81542H5.08172Z" fill="#CCCCCC" />
-    </svg>
-  )
 
   const [cart, setCart] = useState<Product[]>([]);
   const [availableProducts, setAvailableProducts] = useState(products);
@@ -76,66 +61,13 @@ export default function Home() {
           <button onClick={classToggle}>View All {counter > 0 ? <span>{counter}</span> : ''}</button>
         </div>
 
-        <ul className={styles.ul}>
-          {filteredProducts.map(item => (
-            <li className={styles.liProduct} key={item.id}>
-              <img src={item.image} />
-              <div className={styles.content}>
-                <h3 className={styles.productName}>{item.name}</h3>
-
-                <div className={styles.price}>
-                  {item.onSale ? (
-                    <div>
-                      <span>${item.price} <p>${item.oldPrice}</p></span>
-                    </div>
-                  ) : (
-                    <span>${item.price}</span>
-                  )}
-                  <button className={styles.cartIcon} onClick={() => addToCart(item)}>{cartIcon}</button>
-                </div>
-                <div className={styles.itemRating}>{Array.from({ length: 5 }, (_, i) => (
-                  <span key={i}>{i < item.rating ? star : emptyStar}</span>
-                ))}</div>
-              </div>
-              {item.onSale && (
-                <span className={styles.itemSale}>Sale {item.discountPercent}%</span>
-              )}
-            </li>
-          ))}
-        </ul>
+        <ProductGrid products={filteredProducts} onButtonClick={addToCart} />
 
 
         {isCartVisible && (
           <>
             <h2>Your Cart</h2>
-
-            <ul className={styles.ul}>
-              {cart.map(item => (
-                <li className={styles.liProduct} key={item.id}>
-                  <img src={item.image} />
-                  <div className={styles.content}>
-                    <h3 className={styles.productName}>{item.name}</h3>
-
-                    <div className={styles.price}>
-                      {item.onSale ? (
-                        <div>
-                          <span>${item.price} <p>${item.oldPrice}</p></span>
-                        </div>
-                      ) : (
-                        <span>${item.price}</span>
-                      )}
-                      <button className={styles.cartIcon} onClick={() => removeFromCart(item)}>{cartIcon}</button>
-                    </div>
-                    <div className={styles.itemRating}>{Array.from({ length: 5 }, (_, i) => (
-                      <span key={i}>{i < item.rating ? star : emptyStar}</span>
-                    ))}</div>
-                  </div>
-                  {item.onSale && (
-                    <span className={styles.itemSale}>Sale {item.discountPercent}%</span>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <ProductGrid products={cart} onButtonClick={removeFromCart} />
           </>
         )}
 
