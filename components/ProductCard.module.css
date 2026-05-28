@@ -1,0 +1,101 @@
+.liProduct {
+    position: relative;
+    border: 1px solid #E6E6E6;
+    background: #FFF;
+    width: 264px;
+    height: 327px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.liProduct:hover {
+    border: 1px solid #2C742F;
+    background: #FFF;
+    box-shadow: 0 0 12px 0 rgba(32, 181, 38, 0.32);
+}
+
+.liProduct>img {
+    width: 100%;
+    height: 230px;
+    object-fit: contain;
+}
+
+
+.content {
+    margin: 12px 0 0 12px;
+}
+
+.productName {
+    margin: 0;
+    color: #4D4D4D;
+    font-family: Poppins;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.price span {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-weight: 600;
+}
+
+.price span p {
+    margin: 0;
+    text-decoration: line-through;
+    color: #999;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 400;
+    text-decoration-line: line-through;
+    font-size: 15px;
+}
+
+.cartIcon {
+    background-color: #F2F2F2;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    margin-right: 16px;
+}
+
+.itemRating {
+    display: flex;
+    align-items: center;
+    gap: 2.5px;
+}
+
+.cartIcon:hover {
+    background-color: #00B207;
+}
+
+.cartIcon:hover svg path {
+    stroke: #FFF;
+}
+
+
+.itemSale {
+    position: absolute;
+    border-radius: 4px;
+    background: #EA4B48;
+
+    color: #FFF;
+
+    font-family: Poppins;
+    font-size: 14px;
+    font-weight: 400;
+
+    padding: 3px 8px;
+
+    left: 16px;
+    top: 16px;
+}
